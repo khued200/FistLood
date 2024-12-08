@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_conv/ui/app_routes.dart';
+import 'package:shopping_conv/ui/helper_func.dart';
 
 class GroceryListScreen extends StatefulWidget {
   const GroceryListScreen({Key? key}) : super(key: key);
@@ -11,6 +13,18 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
   bool isAddingItem = false;
   final TextEditingController itemController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
+  final FocusNode itemFocusNode = FocusNode();
+  final FocusNode quantityFocusNode = FocusNode();
+
+// Dispose of the focus nodes to avoid memory leaks
+  @override
+  void dispose() {
+    itemFocusNode.dispose();
+    quantityFocusNode.dispose();
+    itemController.dispose();
+    quantityController.dispose();
+    super.dispose();
+  }
 
   final List<Map<dynamic, dynamic>> groceryCategories = [
     {
@@ -83,6 +97,11 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
       });
     }
   }
+
+  int getTotalItems() {
+    return groceryList.fold(0, (total, category) => total + category.grocerylist.length);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,9 +109,16 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
         backgroundColor: const Color.fromRGBO(158, 237, 255, 100),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('My Grocery List', style: TextStyle(fontSize: 20)),
-            Text('3 Items', style: TextStyle(fontSize: 12)),
+          children: [
+            const Text('My Grocery List', style: TextStyle(fontSize: 20)),
+            Text(
+              getTotalItems() == 0
+                  ? "No items"
+                  : getTotalItems() == 1
+                      ? "1 item"
+                      : "${getTotalItems()} items",
+              style: const TextStyle(fontSize: 12),
+            ),
           ],
         ),
         leading: IconButton(
@@ -169,6 +195,7 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
                 
                       TextField(
                         controller: itemController,
+                        focusNode: itemFocusNode,
                         decoration: const InputDecoration(
                           hintText: 'Item Name',
                           border: OutlineInputBorder(),
@@ -182,6 +209,7 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
 
                       TextField(
                         controller: quantityController,
+                        focusNode: quantityFocusNode,
                         decoration: const InputDecoration(
                           hintText: 'Quantity',
                           border: OutlineInputBorder(),
@@ -246,6 +274,27 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: getCurrentIndex(context),
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.red,
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              // Navigator.pushNamedAndRemoveUntil(context, AppRoutes.groceryList, (route) => false);
+              break;
+            case 1:
+              // Navigator.pushNamedAndRemoveUntil(context, AppRoutes.foodRecipes, (route) => false);
+              break;
+            case 2:
+              Navigator.pushNamedAndRemoveUntil(context, AppRoutes.mealPlanner, (route) => false);
+              break;
+            case 3:
+              // Navigator.pushNamedAndRemoveUntil(context, AppRoutes.settings, (route) => false);
+              break;
+          }
+        },
+
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.list), label: "Lists"),
           BottomNavigationBarItem(icon: Icon(Icons.book), label: "Recipes"),
@@ -254,9 +303,6 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
           BottomNavigationBarItem(
               icon: Icon(Icons.settings), label: "Settings"),
         ],
-        selectedItemColor: const Color.fromRGBO(255, 102, 102, 30),
-        unselectedItemColor: const Color.fromRGBO(117, 117, 117, 100),
-        type: BottomNavigationBarType.fixed,
       ),
     );
   }
@@ -339,7 +385,7 @@ class GroceryItem extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              "$item $quantity",
+              quantity.isEmpty ? item : "$item ($quantity)",
               style: const TextStyle(fontSize: 16),
             ),
           ),
