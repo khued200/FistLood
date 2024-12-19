@@ -124,7 +124,7 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Navigator.pop(context); // Navigate back
+            Navigator.pushNamed(context, AppRoutes.register);
           },
         ),
         actions: [
