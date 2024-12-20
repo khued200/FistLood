@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_conv/blocs/mealplan/meal_plan_bloc.dart';
+import 'package:shopping_conv/ui/app_routes.dart';
+import 'package:shopping_conv/blocs/navigation/navigation.dart';
+import '../ui/home_screen.dart';
+import '../blocs/grocery/grocery_list_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_conv/data/services/auth_service.dart';
 import 'package:shopping_conv/data/services/utils/api_instance.dart';
-import 'package:shopping_conv/ui/meal_plan/meal_planner.dart';
 import 'package:shopping_conv/ui/list/grocery_list_screen.dart';
 import 'package:shopping_conv/ui/app_routes.dart';
 import 'package:shopping_conv/ui/register/login_view_model.dart';
@@ -36,34 +41,59 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return _isAuthenticated
         ? MultiProvider(
-      providers: [
-        Provider(create: (_) => ApiService()),
-        ProxyProvider<ApiService, AuthService>(
-          update: (_, apiService, __) => AuthService(apiService: apiService),
-        ),
-        ChangeNotifierProxyProvider<AuthService, RegisterViewModel>(
-          update: (_, authService, __) => RegisterViewModel(authService: authService),
-          create: (BuildContext context) => RegisterViewModel(authService: context.read<AuthService>()),
-        ),
-        ChangeNotifierProxyProvider<AuthService, LoginViewModel>(
-          update: (_, authService, __) => LoginViewModel(authService: authService),
-          create: (BuildContext context) => LoginViewModel(authService: context.read<AuthService>()),
-        ),
-      ],
-      child: MaterialApp(
-        initialRoute: AppRoutes.groceryList,
-        routes: AppRoutes.getRoutes(),
-        debugShowCheckedModeBanner: true,
-        title: 'GroceryListScreen',
-        theme: ThemeData(primarySwatch: Colors.cyan),
-      ),
-    )
-        : MaterialApp(
-      initialRoute: AppRoutes.register,
-      routes: AppRoutes.getRoutes(),
-      debugShowCheckedModeBanner: true,
-      title: 'GroceryListScreen',
-      theme: ThemeData(primarySwatch: Colors.cyan),
-    );
+            providers: [
+              Provider(create: (_) => ApiService()),
+              ProxyProvider<ApiService, AuthService>(
+                update: (_, apiService, __) =>
+                    AuthService(apiService: apiService),
+              ),
+              ChangeNotifierProxyProvider<AuthService, RegisterViewModel>(
+                update: (_, authService, __) =>
+                    RegisterViewModel(authService: authService),
+                create: (_) => RegisterViewModel(
+                  authService: Provider.of<AuthService>(context, listen: false),
+                ),
+              ),
+              ChangeNotifierProxyProvider<AuthService, LoginViewModel>(
+                update: (_, authService, __) =>
+                    LoginViewModel(authService: authService),
+                create: (_) => LoginViewModel(
+                  authService: Provider.of<AuthService>(context, listen: false),
+                ),
+              ),
+            ],
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => NavigationBloc()),
+                BlocProvider(create: (_) => GroceryBloc()),
+                BlocProvider(create: (_) => MealPlanBloc()),
+              ],
+              child: MaterialApp(
+                home: HomeScreen(),
+                onGenerateRoute: (settings) {
+                  // Handle other routes that aren't part of bottom navigation
+                  return MaterialPageRoute(
+                    builder: (_) => HomeScreen(),
+                  );
+                },
+              ),
+            ),
+          )
+        : MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => NavigationBloc()),
+              BlocProvider(create: (_) => GroceryBloc()),
+              BlocProvider(create: (_) => MealPlanBloc()),
+            ],
+            child: MaterialApp(
+              home: HomeScreen(),
+              onGenerateRoute: (settings) {
+                // Handle other routes that aren't part of bottom navigation
+                return MaterialPageRoute(
+                  builder: (_) => HomeScreen(),
+                );
+              },
+            ),
+          );
   }
 }
