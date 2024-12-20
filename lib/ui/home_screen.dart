@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_conv/blocs/navigation/navigation.dart';
 import 'list/grocery_list_screen.dart';
 import '../ui/meal_plan/meal_plan_screen.dart';
-import '../checkpoint/recipe_search.dart';
+import '../ui/meal_plan/recipe_search_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
