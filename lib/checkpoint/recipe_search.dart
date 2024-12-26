@@ -18,7 +18,7 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
-//         backgroundColor: const Color.fromRGBO(158, 237, 255, 100),
+//         backgroundColor: constant Color.fromRGBO(158, 237, 255, 100),
 //         title: TextField(
 //           decoration: InputDecoration(
 //             hintText: 'Search recipes',
@@ -28,7 +28,7 @@
 //           focusNode: recipeFocusNode,
 //         ),
 //         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back),
+//           icon: constant Icon(Icons.arrow_back),
 //           onPressed: () {
 //             Navigator.pop(context); // Navigate back
 //           },
@@ -45,7 +45,7 @@
 //       body:Stack(
 //         children: [
 //           Container(
-//             decoration: const BoxDecoration(
+//             decoration: constant BoxDecoration(
 //               image: DecorationImage(
 //                 image: AssetImage('assets/background.png'),
 //                 fit: BoxFit.cover,
@@ -63,7 +63,7 @@
 //                 // Navigate to create new recipes
 //               },
 //             ),
-//             // const Divider(height: 1, thickness: 1, c olor: Colors.grey),
+//             // constant Divider(height: 1, thickness: 1, c olor: Colors.grey),
 //             _buildSectionHeader("Existing recipes"),
 //             _buildListTile(
 //               context,
@@ -89,7 +89,7 @@
 //                 // Navigate to side dishes
 //               },
 //             ),
-//             const Divider(height: 1, thickness: 1, color: Colors.grey),
+//             constant Divider(height: 1, thickness: 1, color: Colors.grey),
 //           ],
 //         ),
 //         ],
@@ -100,15 +100,15 @@
 
 //     Widget _buildSectionHeader(String title) {
 //       return Container(
-//         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-//         color: const Color.fromRGBO(229, 223, 223, 1), // Light gray for section header background
+//         padding: constant EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//         color: constant Color.fromRGBO(229, 223, 223, 1), // Light gray for section header background
 //         child: Row(
 //           children: [
-//             const Icon(Icons.restaurant_menu, size: 18),
-//             const SizedBox(width: 8),
+//             constant Icon(Icons.restaurant_menu, size: 18),
+//             constant SizedBox(width: 8),
 //             Text(
 //               title,
-//               style: const TextStyle(
+//               style: constant TextStyle(
 //                 fontSize: 16,
 //                 fontWeight: FontWeight.bold,
 //               ),
@@ -130,12 +130,12 @@
 //           border: Border.symmetric(horizontal: BorderSide(color: Colors.grey))
 //         ),
 //         child: ListTile(
-//           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+//           contentPadding: constant EdgeInsets.symmetric(horizontal: 16),
 //           title: Text(
 //             title,
-//             style: const TextStyle(fontSize: 16),
+//             style: constant TextStyle(fontSize: 16),
 //           ),
-//           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+//           trailing: constant Icon(Icons.arrow_forward_ios, size: 16),
 //           onTap: onTap,
 //         ),
 //       ); 

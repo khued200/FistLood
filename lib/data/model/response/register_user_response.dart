@@ -15,7 +15,6 @@ class RegisterUserResponse {
       code: data['code'],
       message: data['message'],
       data: RegisterUserResponseData(
-        id: data['data']['id'],
         email: data['data']['email'],
         isVerified: data['data']['is_verified'],
         isActive: data['data']['is_active'],
@@ -25,12 +24,10 @@ class RegisterUserResponse {
 
 }
 class RegisterUserResponseData {
-  int id;
   String email;
   bool isVerified;
   bool isActive;
   RegisterUserResponseData({
-    required this.id,
     required this.email,
     required this.isVerified,
     required this.isActive,

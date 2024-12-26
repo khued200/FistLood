@@ -14,6 +14,7 @@ class AppRoutes {
   static const String register = '/register';
   static const String homescreen = '/homescreen';
 
+
   static Map<String, WidgetBuilder> getRoutes() {
     return {
       homescreen: (context) => HomeScreen(),

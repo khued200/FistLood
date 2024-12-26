@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_conv/ui/constant/error.dart';
 import '../register_view_model.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -19,12 +20,14 @@ class _RegisterFormState extends State<RegisterForm> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       context.read<RegisterViewModel>().register(
+        context: context,
         email: _email,
         password: _password,
         name: _name,
         language: _language,
         timezone: _timezone,
       );
+
     }
   }
 
@@ -84,10 +87,10 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
             ),
             if (viewModel.errorMessage != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
+               Padding(
+                padding: EdgeInsets.only(top: 20),
                 child: Text(
-                  viewModel.errorMessage!,
+                  MessageError.errorCommon,
                   style: TextStyle(color: Colors.red),
                 ),
               ),

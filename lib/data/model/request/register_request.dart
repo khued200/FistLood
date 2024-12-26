@@ -20,7 +20,7 @@ class RegisterRequestModel {
       'name': name,
       'language': language,
       'timezone': timezone,
-      'device_id': deviceId,
+      'deviceId': deviceId,
     };
   }
 }

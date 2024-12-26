@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 class ApiService {
-  static const baseURL = "https://api.gotostore.site";
+  static const baseURL = "http://localhost:8080";
   final Dio _dio;
 
 
