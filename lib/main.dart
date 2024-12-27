@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_conv/blocs/mealplan/meal_plan_bloc.dart';
 import 'package:shopping_conv/ui/app_routes.dart';
 import 'package:shopping_conv/blocs/navigation/navigation.dart';
+import 'package:shopping_conv/ui/profile/user_profile_view_model.dart';
 import 'package:shopping_conv/ui/register/register_screen.dart';
 import 'package:shopping_conv/ui/register/request_otp_view_model.dart';
 import '../ui/home_screen.dart';
@@ -68,6 +69,14 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProxyProvider<AuthService,RequestOtpViewModel>(
             create: (context) => RequestOtpViewModel(authService: context.read<AuthService>()),
             update: (_, authService, __) => RequestOtpViewModel(authService: authService),),
+        ChangeNotifierProxyProvider<AuthService, ProfileViewModel>(
+          create: (context) => ProfileViewModel(
+            apiService: context.read<AuthService>(),
+          ),
+          update: (_, authService, __) => ProfileViewModel(
+            apiService: authService,
+          ),
+        ),
         // Blocs
         BlocProvider(create: (_) => NavigationBloc()),
         BlocProvider(create: (_) => GroceryBloc()),

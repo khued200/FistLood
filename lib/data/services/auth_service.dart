@@ -1,11 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:shopping_conv/data/model/request/otp_request.dart';
 import 'package:shopping_conv/data/model/request/otp_verify.dart';
 import 'package:shopping_conv/data/model/request/register_request.dart';
+import 'package:shopping_conv/data/model/response/get_user_profile_response.dart';
 import 'package:shopping_conv/data/model/response/login_user_response.dart';
 import 'package:shopping_conv/data/model/response/otp_response.dart';
 import 'package:shopping_conv/data/model/response/register_user_response.dart';
 import 'package:shopping_conv/data/services/utils/api_instance.dart';
 import 'package:shopping_conv/data/services/utils/device_info.dart';
+import 'package:dio/dio.dart';
+import 'package:shopping_conv/ui/app_routes.dart';
+import 'package:shopping_conv/utils/auth_storage_util.dart';
+
 
 import '../model/request/login_request.dart';
 
@@ -14,6 +20,7 @@ class AuthService {
   static const loginPath = '/authen-service/public/v1/user/login';
   static const SendOTPPath = '/authen-service/public/v1/user/send-verification-code';
   static const VerifyOTPPath = '/authen-service/public/v1/user/verify-email';
+  static const GetUserProfile = '/authen-service/public/v1/user/profile';
   final ApiService apiService;
   AuthService({required this.apiService});
   Future<RegisterUserResponse> registerUser({
@@ -51,6 +58,9 @@ class AuthService {
       final response = await apiService.dio.post(
         loginPath,
         data: requestBody,
+          options: Options(
+            extra: {'requiresToken': true},
+          )
       );
       return LoginUserResponse.fromJson(response.data);
     } catch (e) {
@@ -85,5 +95,30 @@ class AuthService {
     } catch (e) {
       throw Exception(e);
     }
+  }
+  Future<GetUserProfileResponse> getUserProfile(BuildContext context) async {
+    try {
+      final response = await apiService.dio.get(
+        GetUserProfile,
+        options: Options(
+          extra: {'requiresToken': true},
+        )
+      );
+      return GetUserProfileResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        AuthStorage.clearAuthData();
+      }
+      //navigate to login screen
+      Navigator.pushReplacementNamed(context,AppRoutes.register);
+      throw Exception(e);
+    }
+    catch (e) {
+      throw Exception(e);
+    }
+  }
+   Future<void> logout(BuildContext context) async {
+    AuthStorage.clearAuthData();
+    Navigator.pushReplacementNamed(context, AppRoutes.register);
   }
 }
