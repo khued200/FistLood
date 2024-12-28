@@ -2,9 +2,13 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_conv/blocs/profile/profile_event.dart';
 import 'package:shopping_conv/ui/app_routes.dart';
 import 'package:shopping_conv/ui/profile/user_profile_view_model.dart';
+import 'package:shopping_conv/ui/register/register_screen.dart';
 import 'package:shopping_conv/utils/auth_storage_util.dart';
+
+import '../../blocs/profile/profile_bloc.dart';
 
 
 class ProfileScreen extends StatelessWidget {
@@ -17,13 +21,16 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Future<void> _refreshProfile(BuildContext context) async {
-    await context.read<ProfileViewModel>().fetchProfile(context);
+    context.read<ProfileBloc>().add(FetchProfile(context));
   }
 
-  void _logout(BuildContext context) async{
+  Future<void> _logout(BuildContext context) async{
     AuthStorage.clearAuthData();
-    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.register, (route) => false);
-
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+        AppRoutes.register,
+          (Route<dynamic> route) => false,
+    );
   }
 
   @override

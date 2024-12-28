@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_conv/checkpoint/grocery_list_screen.dart';
+import 'package:shopping_conv/ui/food/food_screen.dart';
 import 'package:shopping_conv/ui/home_screen.dart';
 import 'package:shopping_conv/ui/list/grocery_list_screen.dart';
 import 'package:shopping_conv/ui/meal_plan/meal_plan_screen.dart';
@@ -15,16 +16,17 @@ class AppRoutes {
   static const String register = '/register';
   static const String homescreen = '/homescreen';
   static const String profileView = '/profileView';
-
+  static const String foodScreen = '/foodScreen';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
       homescreen: (context) => HomeScreen(),
       // mealPlanner: (context) => MealPlanScreen(),
       // recipeSearch: (context) => RecipeSearchScreen(),
-      // settings: (context) => Center(child: Text("Settings Screen")),
+
       register: (context) => RegisterScreen(),
       profileView: (context) => ProfileScreen(),
+      foodScreen: (context) => FoodManagementScreen(),
     };
   }
 }

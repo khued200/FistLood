@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_conv/blocs/navigation/navigation.dart';
+import 'package:shopping_conv/ui/fridge/fridge_screen.dart';
 import 'package:shopping_conv/ui/profile/profile_view_screen.dart';
 import 'package:shopping_conv/ui/profile/user_profile_view_model.dart';
 import 'package:shopping_conv/ui/register/login_view_model.dart';
@@ -19,7 +20,7 @@ class HomeScreen extends StatelessWidget {
 
   final List<Widget> _initialScreens = [
     GroceryListScreen(),
-    const Center(child: Text('Recipes')),
+    FridgeScreen(),
     MealPlanScreen(),
     ProfileScreen(),
   ];

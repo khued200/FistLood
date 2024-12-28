@@ -34,7 +34,11 @@ class LoginViewModel extends ChangeNotifier {
       }
       //save token
       await AuthStorage.saveAuthToken(loginUser.data.accessToken, loginUser.data.refreshToken);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.homescreen, // Your home screen route
+            (Route<dynamic> route) => false,
+      );
     } catch (error) {
       errorMessage = error.toString();
 
