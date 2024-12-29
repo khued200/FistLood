@@ -119,6 +119,6 @@ class AuthService {
   }
    Future<void> logout(BuildContext context) async {
     AuthStorage.clearAuthData();
-    Navigator.pushReplacementNamed(context, AppRoutes.register);
+    Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.register, (route) => false);
   }
 }

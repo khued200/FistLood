@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shopping_conv/models/meal_plan_models.dart';
@@ -10,20 +11,31 @@ abstract class MealPlanEvent extends Equatable {
 }
 
 class LoadMealsForDay extends MealPlanEvent {
-  final DateTime selectedDay;
+  final BuildContext context;
+  final int selectedDay;
 
-  const LoadMealsForDay(this.selectedDay);
+  const LoadMealsForDay(this.context, this.selectedDay);
 
   @override
-  List<Object?> get props => [selectedDay];
+  List<Object?> get props => [context, selectedDay];
 }
 
 class AddMealPlan extends MealPlanEvent {
-  final DishesPlanned meal;
-  final DateTime day;
+  final String name;
+  final String description;
+  final int schedule;
+  final String? status;
+  final List<int> foodIds;
 
-  const AddMealPlan(this.meal, this.day);
+  final BuildContext context;
+  AddMealPlan(
+      {required this.context,
+      required this.name,
+      required this.description,
+      required this.schedule,
+       this.status,
+      required this.foodIds});
 
   @override
-  List<Object?> get props => [meal, day];
+  List<Object?> get props => [name, description, schedule, status, foodIds];
 }

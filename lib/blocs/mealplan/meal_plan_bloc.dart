@@ -1,12 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:shopping_conv/data/services/meal_service.dart';
 import 'package:shopping_conv/models/meal_plan_models.dart';
 import 'package:shopping_conv/blocs/mealplan/meal_plan_event.dart';
 import 'package:shopping_conv/blocs/mealplan/meal_plan_state.dart';
 
 
 class MealPlanBloc extends Bloc<MealPlanEvent, MealPlanState> {
-  MealPlanBloc() : super(MealPlanInitial()) {
+  final MealService mealService;
+
+  MealPlanBloc({required this.mealService}) : super(MealPlanInitial()){
     on<LoadMealsForDay>(_onLoadMealsForDay);
     on<AddMealPlan>(_onAddMealPlan);
   }
@@ -14,8 +17,8 @@ class MealPlanBloc extends Bloc<MealPlanEvent, MealPlanState> {
   void _onLoadMealsForDay(LoadMealsForDay event, Emitter<MealPlanState> emit) async {
     emit(MealPlanLoading());
     try {
-      final meals = _getMealsForDay(event.selectedDay);
-      emit(MealPlanLoaded(meals, event.selectedDay));
+      final response = await mealService.getListMeal(event.context, event.selectedDay);
+      emit(MealPlanLoaded(response.data, event.selectedDay));
     } catch (e) {
       emit(MealPlanError(e.toString()));
     }
@@ -23,9 +26,8 @@ class MealPlanBloc extends Bloc<MealPlanEvent, MealPlanState> {
 
   void _onAddMealPlan(AddMealPlan event, Emitter<MealPlanState> emit) async {
     try {
-      // Add meal to storage/database
-      final updatedMeals = _getMealsForDay(event.day);
-      emit(MealPlanLoaded(updatedMeals, event.day));
+       await mealService.createMeal(event.context, event.name, event.description, event.schedule, event.status!, event.foodIds);
+      emit(MealPlanAdded());
     } catch (e) {
       emit(MealPlanError(e.toString()));
     }

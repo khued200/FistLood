@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
   final List<Widget> _initialScreens = [
     GroceryListScreen(),
     FridgeScreen(),
-    MealPlanScreen(),
+    MealScreen(),
     ProfileScreen(),
   ];
 

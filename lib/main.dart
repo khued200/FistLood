@@ -8,11 +8,13 @@ import 'package:shopping_conv/blocs/profile/profile_bloc.dart';
 import 'package:shopping_conv/blocs/unit/unit_bloc.dart';
 import 'package:shopping_conv/data/services/food_service.dart';
 import 'package:shopping_conv/data/services/fridge_service.dart';
+import 'package:shopping_conv/data/services/meal_service.dart';
 import 'package:shopping_conv/data/services/unit_service.dart';
 import 'package:shopping_conv/ui/app_routes.dart';
 import 'package:shopping_conv/blocs/navigation/navigation.dart';
 import 'package:shopping_conv/ui/food/food_screen.dart';
 import 'package:shopping_conv/ui/fridge/fridge_screen.dart';
+import 'package:shopping_conv/ui/meal_plan/meal_plan_screen.dart';
 import 'package:shopping_conv/ui/profile/profile_view_screen.dart';
 import 'package:shopping_conv/ui/profile/user_profile_view_model.dart';
 import 'package:shopping_conv/ui/register/register_screen.dart';
@@ -74,6 +76,9 @@ class _MyAppState extends State<MyApp> {
         ProxyProvider<ApiService, UnitService>(
           update: (_, apiService, __) => UnitService(apiService: apiService),
         ),
+        ProxyProvider<ApiService, MealService>(
+          update: (_, apiService, __) => MealService(apiService: apiService),
+        ),
         // ViewModels
         ChangeNotifierProxyProvider<AuthService, RegisterViewModel>(
           create: (context) => RegisterViewModel(
@@ -105,7 +110,7 @@ class _MyAppState extends State<MyApp> {
         // Blocs
         BlocProvider(create: (_) => NavigationBloc()),
         BlocProvider(create: (_) => GroceryBloc()),
-        BlocProvider(create: (_) => MealPlanBloc()),
+        BlocProvider(create: (_) => MealPlanBloc(mealService: context.read<MealService>())),
         BlocProvider(
           create: (context) => ProfileBloc(authService: context.read<AuthService>()),
           child: ProfileScreen(),
@@ -120,6 +125,8 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(create: (context) => CategoryBloc(categoryService: context.read<CategoryService>())),
         BlocProvider(create: (context) => UnitBloc(unitService: context.read<UnitService>())),
+        BlocProvider(create: (context) => MealPlanBloc(mealService: context.read<MealService>()),
+        child: MealScreen(),),
 
       ],
       child: MaterialApp(
