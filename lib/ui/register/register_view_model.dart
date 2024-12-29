@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_conv/data/services/auth_service.dart';
+import 'package:shopping_conv/ui/register/request_otp_screen.dart';
 
 class RegisterViewModel extends ChangeNotifier {
   final AuthService authService;
@@ -10,6 +11,7 @@ class RegisterViewModel extends ChangeNotifier {
   String? errorMessage;
 
   Future<void> register({
+    required BuildContext context,
     required String email,
     required String password,
     required String name,
@@ -28,7 +30,9 @@ class RegisterViewModel extends ChangeNotifier {
         language: language,
         timezone: timezone,
       );
-      print('Registered user: $registeredUser');
+      if (registeredUser.data.isVerified == false){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpVerificationScreen(email: email)));
+      }
     } catch (error) {
       errorMessage = error.toString();
     } finally {

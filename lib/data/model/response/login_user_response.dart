@@ -15,6 +15,7 @@ class LoginUserResponse {
       data: LoginUserData(
         accessToken: data['data']['access_token'],
         refreshToken: data['data']['refresh_token'],
+        isVerified: data['data']['is_verified'],
       ),
     ));
   }
@@ -23,8 +24,10 @@ class LoginUserResponse {
 class LoginUserData {
   final String accessToken;
   final String refreshToken;
+  final bool isVerified;
   LoginUserData({
     required this.accessToken,
     required this.refreshToken,
+    required this.isVerified,
   });
 }

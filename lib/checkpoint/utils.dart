@@ -9,7 +9,7 @@
 // class DishesPlanned {
 //   final String mealName;
 //   final String mealType;
-//   const DishesPlanned(this.mealName, this.mealType);
+//   constant DishesPlanned(this.mealName, this.mealType);
 
 //   // @override
 //   String toGetMealName() => mealName;

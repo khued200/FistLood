@@ -3,7 +3,7 @@
 // import 'package:shopping_conv/ui/helper_func.dart';
 
 // class GroceryListScreen extends StatefulWidget {
-//   const GroceryListScreen({Key? key}) : super(key: key);
+//   constant GroceryListScreen({Key? key}) : super(key: key);
 
 //   @override
 //   State<GroceryListScreen> createState() => _GroceryListScreenState();
@@ -106,30 +106,30 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
-//         backgroundColor: const Color.fromRGBO(158, 237, 255, 100),
+//         backgroundColor: constant Color.fromRGBO(158, 237, 255, 100),
 //         title: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
-//             const Text('My Grocery List', style: TextStyle(fontSize: 20)),
+//             constant Text('My Grocery List', style: TextStyle(fontSize: 20)),
 //             Text(
 //               getTotalItems() == 0
 //                   ? "No items"
 //                   : getTotalItems() == 1
 //                       ? "1 item"
 //                       : "${getTotalItems()} items",
-//               style: const TextStyle(fontSize: 12),
+//               style: constant TextStyle(fontSize: 12),
 //             ),
 //           ],
 //         ),
 //         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back),
+//           icon: constant Icon(Icons.arrow_back),
 //           onPressed: () {
 //             // Navigator.pop(context); // Navigate back
 //           },
 //         ),
 //         actions: [
 //           IconButton(
-//             icon: const Icon(Icons.more_vert),
+//             icon: constant Icon(Icons.more_vert),
 //             onPressed: () {
 //               // Additional actions
 //             },
@@ -140,7 +140,7 @@
 //         children: [
 //           // Background
 //           Container(
-//             decoration: const BoxDecoration(
+//             decoration: constant BoxDecoration(
 //               image: DecorationImage(
 //                 image: AssetImage('assets/background.png'),
 //                 fit: BoxFit.cover,
@@ -151,7 +151,7 @@
 //             children: [
 //               if (!isAddingItem)
 //                 Container(
-//                     decoration: const BoxDecoration(
+//                     decoration: constant BoxDecoration(
 //                       color: Color.fromRGBO(95, 237, 166, 1),
 //                       border: Border(
 //                         top: BorderSide(color: Colors.black),
@@ -160,7 +160,7 @@
 //                     height: 50,
 //                     child: Center(
 //                       child: Container(
-//                         padding: const EdgeInsets.all(5),
+//                         padding: constant EdgeInsets.all(5),
 //                         decoration: BoxDecoration(
 //                           color: Colors.white,
 //                           border: Border.all(color: Color(0xFFA1AEAF)),
@@ -173,7 +173,7 @@
 //                           },
 //                           child: Row(
 //                             mainAxisSize: MainAxisSize.min,
-//                             children: const [
+//                             children: constant [
 //                               Icon(Icons.add),
 //                               SizedBox(width: 5),
 //                               Text(
@@ -188,7 +188,7 @@
 //                   ),
 //               if (isAddingItem)
 //                 Container(
-//                   padding: const EdgeInsets.all(10),
+//                   padding: constant EdgeInsets.all(10),
 //                   color: Color.fromRGBO(95, 237, 166, 1),
 //                   child: Column(
 //                     children: [
@@ -196,7 +196,7 @@
 //                       TextField(
 //                         controller: itemController,
 //                         focusNode: itemFocusNode,
-//                         decoration: const InputDecoration(
+//                         decoration: constant InputDecoration(
 //                           hintText: 'Item Name',
 //                           border: OutlineInputBorder(),
 //                           fillColor: Colors.white,
@@ -205,12 +205,12 @@
 //                       ),
 
                       
-//                       const SizedBox(height: 10),
+//                       constant SizedBox(height: 10),
 
 //                       TextField(
 //                         controller: quantityController,
 //                         focusNode: quantityFocusNode,
-//                         decoration: const InputDecoration(
+//                         decoration: constant InputDecoration(
 //                           hintText: 'Quantity',
 //                           border: OutlineInputBorder(),
 //                           fillColor: Colors.white,
@@ -218,7 +218,7 @@
 //                         ),
 //                       ),
 
-//                       const SizedBox(height: 10),
+//                       constant SizedBox(height: 10),
 //                       Row(
 //                         mainAxisAlignment: MainAxisAlignment.end,
 //                         children: [
@@ -228,7 +228,7 @@
 //                                 isAddingItem = false;
 //                               });
 //                             },
-//                             child: const Text('Cancel'),
+//                             child: constant Text('Cancel'),
 //                           ),
 //                           TextButton(
 //                             onPressed: () {
@@ -243,7 +243,7 @@
 //                                 });
 //                               }
 //                             },
-//                             child: const Text('Add'),
+//                             child: constant Text('Add'),
 //                           ),
 //                         ],
 //                       ),
@@ -295,7 +295,7 @@
 //           }
 //         },
 
-//         items: const [
+//         items: constant [
 //           BottomNavigationBarItem(icon: Icon(Icons.list), label: "Lists"),
 //           BottomNavigationBarItem(icon: Icon(Icons.book), label: "Recipes"),
 //           BottomNavigationBarItem(
@@ -312,7 +312,7 @@
 //   final String category;
 //   final List<GroceryItem> grocerylist;
 
-//   const GroceryList({
+//   constant GroceryList({
 //     Key? key,
 //     required this.category,
 //     required this.grocerylist,
@@ -334,7 +334,7 @@
 //       crossAxisAlignment: CrossAxisAlignment.start,
 //       children: [
 //         Container(
-//           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+//           padding: constant EdgeInsets.symmetric(vertical: 8, horizontal: 10),
 //           color: categoryColor[category] ?? Colors.grey[200],
 //           child: Row(
 //             children: [
@@ -342,10 +342,10 @@
 //                 categoryIcon[category] ?? Icons.help,
 //                 color: Colors.white,
 //               ),
-//               const SizedBox(width: 8),
+//               constant SizedBox(width: 8),
 //               Text(
 //                 category,
-//                 style: const TextStyle(
+//                 style: constant TextStyle(
 //                   fontSize: 16,
 //                   fontWeight: FontWeight.bold,
 //                   color: Colors.white,
@@ -364,7 +364,7 @@
 //   final String item;
 //   final String quantity;
 
-//   const GroceryItem({
+//   constant GroceryItem({
 //     Key? key,
 //     required this.item,
 //     this.quantity = '',
@@ -374,8 +374,8 @@
 //   Widget build(BuildContext context) {
 //     return Container(
 //       height: 50,
-//       padding: const EdgeInsets.only(left: 10),
-//       decoration: const BoxDecoration(
+//       padding: constant EdgeInsets.only(left: 10),
+//       decoration: constant BoxDecoration(
 //         color: Colors.white,
 //         border: Border(
 //           bottom: BorderSide(color: Colors.grey),
@@ -386,11 +386,11 @@
 //           Expanded(
 //             child: Text(
 //               quantity.isEmpty ? item : "$item ($quantity)",
-//               style: const TextStyle(fontSize: 16),
+//               style: constant TextStyle(fontSize: 16),
 //             ),
 //           ),
 //           IconButton(
-//             icon: const Icon(Icons.edit, size: 18),
+//             icon: constant Icon(Icons.edit, size: 18),
 //             onPressed: () {
 //               // Edit functionality
 //             },

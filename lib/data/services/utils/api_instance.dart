@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:shopping_conv/utils/auth_storage_util.dart';
 
 class ApiService {
-  static const baseURL = "https://api.gotostore.site";
+  static const baseURL = "http://localhost:8080";
   final Dio _dio;
 
 
@@ -16,6 +17,16 @@ class ApiService {
   )) {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
+        if (options.extra['requiresToken'] && options.extra['requiresToken'] == true) {
+          // // Remove the auxiliary header
+          // options.headers.remove('requiresToken');
+          // Get the token
+          _getAccessToken().then((token) {
+            // Add the token to the header
+            options.headers['Authorization'] = 'Bearer $token';
+            handler.next(options); // Continue the request
+          });
+        }
         handler.next(options); // Continue the request
       },
       onResponse: (response, handler) {
@@ -30,4 +41,10 @@ class ApiService {
   }
 
   Dio get dio => _dio;
+
+  Future<String?> _getAccessToken() async {
+    // Get the token from the storage
+    var accessToken = await AuthStorage.getAuthAccessToken();
+    return accessToken;
+  }
 }
