@@ -232,7 +232,7 @@ class _RecipeSearchViewState extends State<_RecipeSearchView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(158, 237, 255, 100),
-        title: Text('Add New Meal'),
+        title: Text('Thêm món ăn'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -254,7 +254,7 @@ class _RecipeSearchViewState extends State<_RecipeSearchView> {
               TextField(
                 controller: _recipeNameController,
                 decoration: InputDecoration(
-                  labelText: 'Recipe Name',
+                  labelText: 'Tên món ăn',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -284,7 +284,7 @@ class _RecipeSearchViewState extends State<_RecipeSearchView> {
                   backgroundColor: Colors.blue,
                 ),
                 child: Text(
-                  'Add to Meal Plan',
+                  'Thêm vào kế hoạch',
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
@@ -298,7 +298,7 @@ class _RecipeSearchViewState extends State<_RecipeSearchView> {
   void _addMealToPlan() {
     if (_recipeNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a recipe name')),
+        SnackBar(content: Text('Nhập tên món ăn')),
       );
       return;
     }
@@ -313,7 +313,7 @@ class _RecipeSearchViewState extends State<_RecipeSearchView> {
 
     // Hiển thị thông báo thành công
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Meal added to plan')),
+      SnackBar(content: Text('Thêm món ăn vào kế hoạch')),
     );
 
     // Quay lại màn hình lịch

@@ -43,12 +43,12 @@ class _EditGroceryScreenState extends State<EditGroceryScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Item'),
-        content: const Text('Are you sure you want to delete this item?'),
+        title: const Text('Xóa vật phẩm'),
+        content: const Text('Bạn có muốn xóa vật phẩm này?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: const Text('Hủy'),
           ),
           TextButton(
             onPressed: () {
@@ -61,7 +61,7 @@ class _EditGroceryScreenState extends State<EditGroceryScreen> {
               Navigator.pop(dialogContext);  // Close dialog
               Navigator.pop(context);        // Return to list screen
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: const Text('Xóa', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -72,7 +72,7 @@ class _EditGroceryScreenState extends State<EditGroceryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Item'),
+        title: const Text('Chỉnh sửa thông tin vật phẩm'),
         backgroundColor: const Color.fromRGBO(158, 237, 255, 100),
         actions: [
           IconButton(

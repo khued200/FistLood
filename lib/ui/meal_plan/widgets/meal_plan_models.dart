@@ -32,11 +32,11 @@ extension MealTypeExtension on MealType {
   String get name {
     switch (this) {
       case MealType.Breakfast:
-        return 'Breakfast';
+        return 'Bữa sáng';
       case MealType.Lunch:
-        return 'Lunch';
+        return 'Bữa trưa';
       case MealType.Dinner:
-        return 'Dinner';
+        return 'Bữa tối';
     }
   }
 }

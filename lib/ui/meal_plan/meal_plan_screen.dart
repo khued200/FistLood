@@ -54,7 +54,7 @@ class _MealPlanViewState extends State<_MealPlanView> {
           appBar: AppBar(
             backgroundColor: const Color(0x9C9EEDFF),
             elevation: 0,
-            title: Text('Meal Plan',
+            title: Text('Lập lịch ăn',
                 style: TextStyle(color: Colors.black, fontSize: 20)),
           ),
           body: Column(
@@ -107,7 +107,7 @@ class _MealPlanViewState extends State<_MealPlanView> {
                   ),
                 );
               },
-              child: Text('Add meal', style: TextStyle(color: Colors.black)),
+              child: Text('Thêm món', style: TextStyle(color: Colors.black)),
             ),
           ),
         ),
@@ -176,7 +176,7 @@ class _MealPlanViewState extends State<_MealPlanView> {
   Widget _buildMealsList(List<DishesPlanned> meals, DateTime day) {
     if (meals.isEmpty) {
       return Center(
-        child: Text('No meals planned for this day'),
+        child: Text('Không có món ăn cho ngày hôm nay'),
       );
     }
 
@@ -216,21 +216,21 @@ class _MealPlanViewState extends State<_MealPlanView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete Meal'),
-          content: Text('Are you sure you want to delete the meal: ${meal.mealName}?'),
+          title: Text('Xóa món ăn'),
+          content: Text('Bạn có muốn xóa bữa ăn: ${meal.mealName}?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Hủy'),
             ),
             TextButton(
               onPressed: () {
                 context.read<MealPlanBloc>().add(DeleteMeal(meal,day)); // Replace with your delete event
                 Navigator.of(context).pop();
               },
-              child: Text('Delete', style: TextStyle(color: Colors.red)),
+              child: Text('Xóa', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -240,11 +240,11 @@ class _MealPlanViewState extends State<_MealPlanView> {
 
   IconData _getMealTypeIcon(String mealType) {
     switch (mealType) {
-      case 'Breakfast':
+      case 'Bữa sáng':
         return Icons.breakfast_dining;
-      case 'Lunch':
+      case 'Bữa trưa':
         return Icons.lunch_dining;
-      case 'Dinner':
+      case 'Bữa tối':
         return Icons.dinner_dining;
       default:
         return Icons.restaurant;

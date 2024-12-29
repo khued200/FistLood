@@ -30,7 +30,7 @@ class GroceryListScreen extends StatelessWidget {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('My Grocery List', style: TextStyle(fontSize: 20)),
+                const Text('Danh sách mua đồ', style: TextStyle(fontSize: 20)),
                 Text(
                   _getTotalItemsText(state.groceryLists),
                   style: const TextStyle(fontSize: 12),
@@ -68,34 +68,34 @@ class GroceryListScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: SizedBox(
-                    height: 50,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Add share functionality
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.family_restroom),
-                          SizedBox(width: 8),
-                          Text('Share with family member'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              )
+              // Align(
+              //   alignment: Alignment.bottomCenter,
+              //   child: Padding(
+              //     padding: EdgeInsets.all(10),
+              //     child: SizedBox(
+              //       height: 50,
+              //       width: double.infinity,
+              //       child: ElevatedButton(
+              //         onPressed: () {
+              //           // Add share functionality
+              //         },
+              //         style: ElevatedButton.styleFrom(
+              //           shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(10),
+              //           ),
+              //         ),
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [
+              //             Icon(Icons.family_restroom),
+              //             SizedBox(width: 8),
+              //             Text('Chia sẻ'),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // )
             ],
           ),
         );
@@ -127,7 +127,7 @@ class GroceryListScreen extends StatelessWidget {
                 children: const [
                   Icon(Icons.add),
                   SizedBox(width: 5),
-                  Text('Add Item', style: TextStyle(fontSize: 16)),
+                  Text('Thêm vật phẩm', style: TextStyle(fontSize: 16)),
                 ],
               ),
             ),
@@ -144,7 +144,7 @@ class GroceryListScreen extends StatelessWidget {
           TextField(
             controller: itemController,
             decoration: const InputDecoration(
-              hintText: 'Item Name',
+              hintText: 'Tên',
               border: OutlineInputBorder(),
               fillColor: Colors.white,
               filled: true,
@@ -154,7 +154,7 @@ class GroceryListScreen extends StatelessWidget {
           TextField(
             controller: quantityController,
             decoration: const InputDecoration(
-              hintText: 'Quantity',
+              hintText: 'Số lượng',
               border: OutlineInputBorder(),
               fillColor: Colors.white,
               filled: true,
@@ -168,7 +168,7 @@ class GroceryListScreen extends StatelessWidget {
                 onPressed: () {
                   context.read<GroceryBloc>().add(ToggleAddItemMode(false));
                 },
-                child: const Text('Cancel'),
+                child: const Text('Hủy'),
               ),
               TextButton(
                 onPressed: () {
@@ -182,7 +182,7 @@ class GroceryListScreen extends StatelessWidget {
                     quantityController.clear();
                   }
                 },
-                child: const Text('Add'),
+                child: const Text('Thêm'),
               ),
             ],
           ),
@@ -194,9 +194,9 @@ class GroceryListScreen extends StatelessWidget {
 
   String _getTotalItemsText(List<GroceryList> lists) {
     final total = lists.fold(0, (sum, category) => sum + category.grocerylist.length);
-    if (total == 0) return "No items";
-    if (total == 1) return "1 item";
-    return "$total items";
+    if (total == 0) return "Không có vật phẩm";
+    if (total == 1) return "1 vật phẩm";
+    return "$total vật phẩm";
   }
 }
 
