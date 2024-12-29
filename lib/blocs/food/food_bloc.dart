@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_conv/data/services/food_service.dart';
 import 'food_event.dart';
@@ -24,7 +23,12 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
 
   Future<void> _onAddFoodItem(AddFoodItem event, Emitter<FoodState> emit) async {
     try {
-      // await foodService.addFoodItem(event.name, event.category);
+      await foodService.createFood(event.context,
+          name: event.name,
+          type: event.type,
+          unitId: event.unitId,
+          categoryId: event.categoryId,
+          imageUrl: event.imageBase64);
       add(FetchFoodItems(context: event.context)); // Re-fetch items after adding
     } catch (e) {
       emit(FoodError(e.toString()));

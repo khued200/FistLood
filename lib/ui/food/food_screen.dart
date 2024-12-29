@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,12 +14,15 @@ import 'package:shopping_conv/blocs/food/food_state.dart';
 import 'package:shopping_conv/blocs/unit/unit_bloc.dart';
 import 'package:shopping_conv/blocs/unit/unit_event.dart';
 import 'package:shopping_conv/blocs/unit/unit_state.dart';
+import 'package:shopping_conv/ui/app_routes.dart';
+import 'package:shopping_conv/ui/home_screen.dart';
 
 class FoodManagementScreen extends StatelessWidget {
   void _showAddFoodDialog(BuildContext context) {
     final _nameController = TextEditingController();
-    String? selectedCategory;
-    String? selectedUnit;
+    final _typeController = TextEditingController();
+    int? selectedCategory;
+    int? selectedUnit;
     String? imageBase64;
 
     Future<void> _pickImage() async {
@@ -58,63 +62,83 @@ class FoodManagementScreen extends StatelessWidget {
                     controller: _nameController,
                     decoration: InputDecoration(labelText: 'Name'),
                   ),
-                  BlocBuilder<CategoryBloc, CategoryState>(
+                  TextField(
+                    controller: _typeController,
+                    decoration: InputDecoration(labelText: 'Type'),
+                  ),
+                  BlocConsumer<CategoryBloc, CategoryState>(
+                    listener: (context, state) {
+                      if (state is CategoryError) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to load categories')),
+                        );
+                      }
+                    },
                     builder: (context, state) {
-                      List<DropdownMenuItem<String>> categoryItems = [];
-
+                      List<DropdownMenuItem<int>> categoryItems = [];
                       if (state is CategoryLoaded) {
                         categoryItems = state.categories.categories
-                            .map((category) => DropdownMenuItem<String>(
-                          value: category.id.toString(),
+                            .map((category) => DropdownMenuItem<int>(
+                          value: category.id,
                           child: Text(category.name ?? 'N/A'),
                         ))
                             .toList();
                       }
 
-                      return DropdownButtonFormField<String>(
-                        value: selectedCategory,
-                        hint: Text('Select a category'),
-                        items: categoryItems,
+                      return GestureDetector(
                         onTap: () {
                           if (state is! CategoryLoaded) {
                             context.read<CategoryBloc>().add(FetchCategories());
                           }
                         },
-                        onChanged: (value) {
-                          setState(() {
-                            selectedCategory = value;
-                          });
-                        },
+                        child: DropdownButtonFormField<int>(
+                          value: selectedCategory,
+                          hint: Text('Select a category'),
+                          items: categoryItems,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCategory = value;
+                            });
+                          },
+                        ),
                       );
                     },
                   ),
-                  BlocBuilder<UnitBloc, UnitState>(
+                  BlocConsumer<UnitBloc, UnitState>(
+                    listener: (context, state) {
+                      if (state is UnitError) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to load units')),
+                        );
+                      }
+                    },
                     builder: (context, state) {
-                      List<DropdownMenuItem<String>> unitItems = [];
-
+                      List<DropdownMenuItem<int>> unitItems = [];
                       if (state is UnitLoaded) {
                         unitItems = state.units.units
-                            .map((unit) => DropdownMenuItem<String>(
-                          value: unit.id.toString(),
+                            .map((unit) => DropdownMenuItem<int>(
+                          value: unit.id,
                           child: Text(unit.name ?? 'N/A'),
                         ))
                             .toList();
                       }
 
-                      return DropdownButtonFormField<String>(
-                        value: selectedUnit,
-                        hint: Text('Select a unit'),
-                        items: unitItems,
+                      return GestureDetector(
                         onTap: () {
-
+                          if (state is! UnitLoaded) {
                             context.read<UnitBloc>().add(FetchUnits());
-
+                          }
                         },
-                        onChanged: (value) {
-                          setState(() {
-                            selectedUnit = value;
-                          });
-                        },
+                        child: DropdownButtonFormField<int>(
+                          value: selectedUnit,
+                          hint: Text('Select a unit'),
+                          items: unitItems,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedUnit = value;
+                            });
+                          },
+                        ),
                       );
                     },
                   ),
@@ -141,17 +165,17 @@ class FoodManagementScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   final name = _nameController.text.trim();
-
+                  final type = _typeController.text.trim();
                   if (name.isNotEmpty &&
-                      selectedCategory != null &&
-                      selectedUnit != null &&
-                      imageBase64 != null) {
-                    context.read<FoodBloc>().add(AddFoodItem(
+                      type.isNotEmpty &&
+                      selectedUnit != null) {
+                    context.read<FoodBloc>().add(AddFoodItem (
                       context: context,
                       name: name,
-                      category: selectedCategory!,
-                      unit: selectedUnit!,
-                      imageBase64: imageBase64!,
+                      categoryId: selectedCategory,
+                      unitId: selectedUnit!,
+                      imageBase64: imageBase64 ?? '',
+                      type: type,
                     ));
                     Navigator.pop(context);
                   } else {
@@ -172,11 +196,6 @@ class FoodManagementScreen extends StatelessWidget {
   }
 
 
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     // Trigger the FetchFoodItems event when the screen is opened
@@ -191,16 +210,93 @@ class FoodManagementScreen extends StatelessWidget {
           if (state is FoodLoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is FoodLoaded) {
-            return state.items.length > 0 ? ListView.builder(
-              itemCount: state.items.length,
-              itemBuilder: (context, index) {
-                final item = state.items[index];
-                return ListTile(
-                  title: Text(item.name ?? 'N/A'),
-                  subtitle: Text(item.type ?? 'N/A'),
-                );
-              },
-            ) : Center(child: Text('No food items found'));
+            if (state.items.isNotEmpty) {
+              return ListView.builder(
+                itemCount: state.items.length,
+                itemBuilder: (context, index) {
+                  final item = state.items[index];
+
+                  // Decode Base64 image
+                  Uint8List? imageBytes;
+                  if (item.imgUrl != null) {
+                    try {
+                      imageBytes = base64Decode(item.imgUrl!);
+                    } catch (e) {
+                      print('Failed to decode Base64 image: $e');
+                    }
+                  }
+
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to the Food Detail Screen
+                      Navigator.pushNamed(context, AppRoutes.homescreen);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 16.0,
+                      ),
+                      child: Row(
+                        children: [
+                          // Thumbnail or default image
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(8.0),
+                              color: Colors.grey[200], // Background color for default
+                            ),
+                            child: imageBytes != null
+                                ? ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.memory(
+                                imageBytes,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return _buildDefaultImage();
+                                },
+                              ),
+                            )
+                                : _buildDefaultImage(),
+                          ),
+                          SizedBox(width: 16), // Spacing between image and text
+                          // Food name and type
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.name ?? 'N/A',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  item.type ?? 'N/A',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Center(child: Text('No food items found'));
+            }
           } else if (state is FoodError) {
             return Center(child: Text('Error: ${state.message}'));
           } else {
@@ -214,4 +310,14 @@ class FoodManagementScreen extends StatelessWidget {
       ),
     );
   }
+
+  /// Builds a default image placeholder for items without a thumbnail
+  Widget _buildDefaultImage() {
+    return Icon(
+      Icons.fastfood,
+      size: 40,
+      color: Colors.grey[400],
+    );
+  }
+
 }

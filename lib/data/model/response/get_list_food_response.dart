@@ -4,7 +4,7 @@ class GetListFoodResponse {
   final List<FoodData> data;
   GetListFoodResponse({required this.code, required this.message, required this.data});
   static Future<GetListFoodResponse> fromJson(Map<String, dynamic> json) async {
-    var foods = json['data.foods'] != null ?  json['data.foods'] as List : [];
+    var foods = json['data']['foods'] != null ?  json['data']['foods'] as List : [];
     return GetListFoodResponse(
       code: json['code'],
       message: json['message'],

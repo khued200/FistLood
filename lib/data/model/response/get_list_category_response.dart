@@ -4,7 +4,7 @@ class GetListCategoryResponse {
   final ListCategoryResponse data;
   GetListCategoryResponse({required this.code, required this.message, required this.data});
   static Future<GetListCategoryResponse> fromJson(Map<String, dynamic> json) async {
-    var categories = json['data.categories'] != null ?  json['data.categories'] as List : [];
+    var categories = json['data']['categories'] != null ?  json['data']['categories'] as List : [];
     return GetListCategoryResponse(
       code: json['code'],
       message: json['message'],

@@ -16,18 +16,20 @@ class FetchFoodItems extends FoodEvent {
 class AddFoodItem extends FoodEvent {
   final BuildContext context;
   final String name;
-  final String category;
-  final String unit;
-  final String imageBase64;
+  final String type;
+  final int? categoryId;
+  final int unitId;
+  final String? imageBase64;
 
   AddFoodItem({
     required this.context,
     required this.name,
-    required this.category,
-    required this.unit,
-    required this.imageBase64,
+    required this.type,
+    required this.unitId,
+    this.categoryId,
+    this.imageBase64,
   });
 
   @override
-  List<Object?> get props => [context, name, category, unit, imageBase64];
+  List<Object?> get props => [context, name, type, categoryId, unitId, imageBase64];
 }
