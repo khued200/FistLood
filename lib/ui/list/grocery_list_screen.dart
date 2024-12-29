@@ -2,11 +2,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_conv/ui/app_routes.dart';
 import 'package:shopping_conv/ui/helper_func.dart';
-import 'package:shopping_conv/models/grocery_list_models.dart';
+import 'package:shopping_conv/ui/list/widgets/grocery_item_list.dart';
 import 'package:shopping_conv/blocs/grocery/grocery_list_bloc.dart';
 import 'package:shopping_conv/blocs/grocery/grocery_list_state.dart';
 import 'package:shopping_conv/blocs/grocery/grocery_list_event.dart';
-import 'package:shopping_conv/models/grocery_list_models.dart';
+import 'package:shopping_conv/ui/list/widgets/grocery_item_list.dart';
 import 'package:shopping_conv/blocs/navigation/navigation.dart';
 
 
@@ -16,97 +16,90 @@ class GroceryListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GroceryBloc(),
-      child: BlocBuilder<GroceryBloc, GroceryState>(
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: const Color.fromRGBO(158, 237, 255, 100),
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  // Navigator.pop(context);
-                  // // Add additional actions here if needed
-                },
+    return BlocBuilder<GroceryBloc, GroceryState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color.fromRGBO(158, 237, 255, 100),
+            // leading: IconButton(
+            //   icon: Icon(Icons.arrow_back),
+            //   onPressed: () {
+            //     // Navigator.pop(context);
+            //   },
+            // ),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('My Grocery List', style: TextStyle(fontSize: 20)),
+                Text(
+                  _getTotalItemsText(state.groceryLists),
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          body: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/background.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Column(
                 children: [
-                  const Text('My Grocery List', style: TextStyle(fontSize: 20)),
-                  Text(
-                    _getTotalItemsText(state.groceryLists),
-                    style: const TextStyle(fontSize: 12),
+                  _buildAddItemSection(context, state),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.groceryLists.length,
+                      itemBuilder: (context, index) {
+                        final category = state.groceryLists[index];
+                        if (category.grocerylist.isEmpty) {
+                          return Container();
+                        }
+                        return GroceryList(
+                          category: category.category,
+                          grocerylist: category.grocerylist,
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
-            ),
-            body: Stack(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/background.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Column(
-                  children: [
-                    _buildAddItemSection(context, state),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: state.groceryLists.length,
-                        itemBuilder: (context, index) {
-                          final category = state.groceryLists[index];
-                          if (category.grocerylist.isEmpty) {
-                            return Container();
-                          }
-                          return GroceryList(
-                            category: category.category,
-                            grocerylist: category.grocerylist,
-                          );
-                        },
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Add share functionality
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.all(10), // Adjust padding for overall layout
-                    child: SizedBox(
-                      height: 50,
-                      width: double.infinity, // Make the button stretch horizontally
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Add your onPressed logic here
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10), // Rounded corners
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center, // Center the content
-                          children: [
-                            Icon(Icons.family_restroom),
-                            SizedBox(width: 8), // Space between icon and text
-                            Text('Share with family member'),
-                          ],
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.family_restroom),
+                          SizedBox(width: 8),
+                          Text('Share with family member'),
+                        ],
                       ),
                     ),
                   ),
-                )
-              ],
-              
-            ),
-            
-
-          );
-        },
-      ),
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -115,7 +108,7 @@ class GroceryListScreen extends StatelessWidget {
       return Container(
         decoration: const BoxDecoration(
           color: Color.fromRGBO(95, 237, 166, 1),
-          border: Border(top: BorderSide(color: Colors.black)),
+          // border: Border(top: BorderSide(color: Colors.black)),
         ),
         height: 50,
         child: Center(
@@ -206,3 +199,4 @@ class GroceryListScreen extends StatelessWidget {
     return "$total items";
   }
 }
+

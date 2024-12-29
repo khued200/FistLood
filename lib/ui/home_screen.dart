@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
     GroceryListScreen(),
     const Center(child: Text('Recipes')),
     MealPlanScreen(),
-    RegisterScreen(),
+    const Center(child: Text('Settings')),
   ];
 
   @override

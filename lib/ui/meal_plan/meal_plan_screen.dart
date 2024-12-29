@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:shopping_conv/models/meal_plan_models.dart';
+import 'package:shopping_conv/ui/meal_plan/widgets/meal_plan_models.dart';
 import 'package:shopping_conv/blocs/mealplan/meal_plan_event.dart';
 import 'package:shopping_conv/blocs/mealplan/meal_plan_state.dart';
 import 'package:shopping_conv/blocs/mealplan/meal_plan_bloc.dart';
@@ -14,8 +14,10 @@ import 'package:shopping_conv/ui/meal_plan/recipe_search_screen.dart';
 class MealPlanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MealPlanBloc()..add(LoadMealsForDay(DateTime.now())),
+    return BlocProvider.value(
+      value: context.read<MealPlanBloc>()
+        ..add(LoadMealsForDay(
+            DateTime.now())), // Share the same MealPlanBloc instance
       child: _MealPlanView(),
     );
   }
@@ -28,83 +30,55 @@ class _MealPlanView extends StatefulWidget {
 
 class _MealPlanViewState extends State<_MealPlanView> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  late DateTime _focusedDay;
+  late DateTime _selectedDay;
 
   @override
   void initState() {
     super.initState();
+    _focusedDay = DateTime.now();
     _selectedDay = _focusedDay;
+    _loadMealsForSelectedDay();
+  }
+
+  void _loadMealsForSelectedDay() {
+    if (!mounted) return;
+    context.read<MealPlanBloc>().add(LoadMealsForDay(_selectedDay));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0x9C9EEDFF),
-        elevation: 0,
-        title:
-            Text('Today', style: TextStyle(color: Colors.black, fontSize: 20)),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.more_vert, color: Colors.black),
-            onPressed: () {},
+    return BlocBuilder<MealPlanBloc, MealPlanState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color(0x9C9EEDFF),
+            elevation: 0,
+            title: Text('Meal Plan',
+                style: TextStyle(color: Colors.black, fontSize: 20)),
           ),
-        ],
-      ),
-      body: BlocBuilder<MealPlanBloc, MealPlanState>(
-        builder: (context, state) {
-          if (state is MealPlanLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          if (state is MealPlanError) {
-            return Center(child: Text(state.message));
-          }
-
-          if (state is MealPlanLoaded) {
-            return Column(
-              children: [
-                _buildCalendar(context, state),
-                _buildActionButtons(context),
-                // _buildMealsList(state.meals),
-              ],
-            );
-          }
-
-          return Container();
-        },
-      ),
-    );
-  }
-
-  Widget _buildCalendar(BuildContext context, MealPlanLoaded state) {
-    return Container(
-      decoration: const BoxDecoration(color: Color(0x9CC3FCDF)),
-      child: TableCalendar(
-        firstDay: DateTime.utc(2010, 10, 16),
-        lastDay: DateTime.utc(2030, 3, 14),
-        focusedDay: _focusedDay,
-        calendarFormat: _calendarFormat,
-        selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-        eventLoader: (day) => state.meals,
-        onDaySelected: (selectedDay, focusedDay) {
-          setState(() {
-            _selectedDay = selectedDay;
-            _focusedDay = focusedDay;
-          });
-          context.read<MealPlanBloc>().add(LoadMealsForDay(selectedDay));
-        },
-        onFormatChanged: (format) {
-          setState(() => _calendarFormat = format);
-        },
-        calendarBuilders: CalendarBuilders(
-          markerBuilder: (context, date, events) {
-            // Implement marker builder
-            return null;
-          },
-        ),
-      ),
+          body: Column(
+            children: [
+              _buildCalendar(context, state),
+              _buildActionButtons(context),
+              Expanded(
+                child: _buildMealsList(
+                    state.meals[_normalizeDate(_selectedDay)] ?? [],
+                    _selectedDay
+                  ),
+              ),
+              if (state.error.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Error: ${state.error}',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -123,43 +97,157 @@ class _MealPlanViewState extends State<_MealPlanView> {
                 )),
             child: TextButton(
               onPressed: () {
-                // Add recipe action
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => RecipeSearchScreen(),
+                    builder: (context) => BlocProvider.value(
+                      value: context.read<
+                          MealPlanBloc>(), // Pass the existing MealPlanBloc
+                      child: RecipeSearchScreen(selectedDay: _selectedDay),
+                    ),
                   ),
                 );
               },
-              child: Text('Add recipe', style: TextStyle(color: Colors.black)),
+              child: Text('Add meal', style: TextStyle(color: Colors.black)),
             ),
           ),
-        ),
-        Expanded(
-            child: Container(
-            decoration: BoxDecoration(
-                color: Color(0x9CE5DFDF),
-                border: Border(
-                  top: BorderSide(color: Color(0x9C837575), width: 2),
-                  left: BorderSide(color: Color(0x9C837575), width: 1),
-                  right: BorderSide(color: Color(0x9C837575), width: 2),
-                  bottom: BorderSide(color: Color(0x9C837575), width: 2),
-                )),
-            child: TextButton(
-              onPressed: () {
-                // setState(() {
-                //   isMealAdded = !isMealAdded;
-                // });
-              },
-            // style: TextButton.styleFrom(
-            //   backgroundColor: Color.fromARGB(156, 20, 15, 15),
-            // ),
-            child: Text('Add meal', style: TextStyle(color: Colors.black)),
-            ),
-          )
         ),
       ],
     );
   }
 
-  // Implement _buildActionButtons and _buildMealsList methods...
+  Widget _buildCalendar(BuildContext context, MealPlanState state) {
+    return Container(
+      decoration: const BoxDecoration(color: Color(0x9CC3FCDF)),
+      child: TableCalendar(
+        firstDay: DateTime.now(),
+        lastDay: DateTime.utc(2030, 3, 14),
+        focusedDay: _focusedDay,
+        calendarFormat: _calendarFormat,
+        selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+        eventLoader: (day) {
+          final normalizedDay = _normalizeDate(day);
+          return state.meals[normalizedDay] ?? [];
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay;
+          });
+          _loadMealsForSelectedDay();
+        },
+        onFormatChanged: (format) {
+          setState(() {
+            _calendarFormat = format;
+          });
+        },
+        calendarBuilders: CalendarBuilders(
+          markerBuilder: (context, date, events) {
+            if (events.isEmpty) return null;
+            final dishesPlannedList = events.cast<DishesPlanned>();
+            // Create colored dots for each event
+            return Positioned(
+              bottom: 1,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: dishesPlannedList.map((event) {
+                  final color = getMealTypeColor(event.mealType);
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 1.0),
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: color,
+                    ),
+                  );
+                }).toList(),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  DateTime _normalizeDate(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
+  Widget _buildMealsList(List<DishesPlanned> meals, DateTime day) {
+    if (meals.isEmpty) {
+      return Center(
+        child: Text('No meals planned for this day'),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: meals.length,
+      itemBuilder: (context, index) {
+        final meal = meals[index];
+        return Card(
+          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: ListTile(
+            title: Text(
+              meal.mealName,
+              // style: TextStyle(color: getMealTypeColor(meal.mealType)), // Change text color
+            ),
+            subtitle: Text(
+              meal.mealType,
+              // style: TextStyle(color: getMealTypeColor(meal.mealType)), // Change subtitle color
+            ),
+            leading: Icon(
+              _getMealTypeIcon(meal.mealType),
+              color: getMealTypeColor(meal.mealType), // Change icon color
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.delete, color: Colors.red),
+              onPressed: () {
+                _showDeleteDialog(meal,day);
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDeleteDialog(DishesPlanned meal, DateTime day) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Meal'),
+          content: Text('Are you sure you want to delete the meal: ${meal.mealName}?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                context.read<MealPlanBloc>().add(DeleteMeal(meal,day)); // Replace with your delete event
+                Navigator.of(context).pop();
+              },
+              child: Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  IconData _getMealTypeIcon(String mealType) {
+    switch (mealType) {
+      case 'Breakfast':
+        return Icons.breakfast_dining;
+      case 'Lunch':
+        return Icons.lunch_dining;
+      case 'Dinner':
+        return Icons.dinner_dining;
+      default:
+        return Icons.restaurant;
+    }
+  }
 }

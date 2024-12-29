@@ -39,44 +39,74 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        // Base services
-        Provider(create: (_) => ApiService()),
-        ProxyProvider<ApiService, AuthService>(
-          update: (_, apiService, __) => AuthService(apiService: apiService),
-        ),
-        
-        // ViewModels
-        ChangeNotifierProxyProvider<AuthService, RegisterViewModel>(
-          create: (context) => RegisterViewModel(
-            authService: context.read<AuthService>(),
-          ),
-          update: (_, authService, __) => RegisterViewModel(
-            authService: authService,
-          ),
-        ),
-        ChangeNotifierProxyProvider<AuthService, LoginViewModel>(
-          create: (context) => LoginViewModel(
-            authService: context.read<AuthService>(),
-          ),
-          update: (_, authService, __) => LoginViewModel(
-            authService: authService,
-          ),
-        ),
-        
-        // Blocs
-        BlocProvider(create: (_) => NavigationBloc()),
-        BlocProvider(create: (_) => GroceryBloc()),
-        BlocProvider(create: (_) => MealPlanBloc()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: true,
-        title: 'GroceryListScreen',
-        theme: ThemeData(primarySwatch: Colors.cyan),
-        home: _isAuthenticated ? HomeScreen() : RegisterScreen(),
-        routes: AppRoutes.getRoutes(),
-      ),
-    );
+    return _isAuthenticated
+        ? MultiProvider(
+            providers: [
+              Provider(create: (_) => ApiService()),
+              ProxyProvider<ApiService, AuthService>(
+                update: (_, apiService, __) =>
+                    AuthService(apiService: apiService),
+              ),
+              ChangeNotifierProxyProvider<AuthService, RegisterViewModel>(
+                update: (_, authService, __) =>
+                    RegisterViewModel(authService: authService),
+                create: (BuildContext context) =>
+                    RegisterViewModel(authService: context.read<AuthService>()),
+              ),
+              ChangeNotifierProxyProvider<AuthService, LoginViewModel>(
+                update: (_, authService, __) =>
+                    LoginViewModel(authService: authService),
+                create: (BuildContext context) =>
+                    LoginViewModel(authService: context.read<AuthService>()),
+              ),
+              BlocProvider<NavigationBloc>(
+                create: (context) => NavigationBloc(),
+              ),
+              BlocProvider<GroceryBloc>(
+                create: (context) => GroceryBloc(),
+              ),
+              BlocProvider<MealPlanBloc>(
+                create: (context) => MealPlanBloc(),
+              ),
+            ],
+            child: 
+
+                // Blocs
+                // BlocProvider(create: (_) => NavigationBloc()),
+                // BlocProvider(create: (_) => GroceryBloc()),
+                // BlocProvider(create: (_) => MealPlanBloc()),
+                MaterialApp(
+                debugShowCheckedModeBanner: true,
+                home: RegisterScreen(),
+                onGenerateRoute: (settings) {
+                  // Handle other routes that aren't part of bottom navigation
+                  return MaterialPageRoute(
+                    builder: (_) => RegisterScreen(),
+                  );
+                },
+              ), 
+        ) 
+        : MultiProvider(
+            providers: [
+              BlocProvider<NavigationBloc>(
+                create: (context) => NavigationBloc(),
+              ),
+              BlocProvider<GroceryBloc>(
+                create: (context) => GroceryBloc(),
+              ),
+              BlocProvider<MealPlanBloc>(
+                create: (context) => MealPlanBloc(),
+              ),
+            ],
+            child: MaterialApp(
+              debugShowCheckedModeBanner: true,
+              home: HomeScreen(),
+              onGenerateRoute: (settings) {
+                return MaterialPageRoute(
+                  builder: (_) => HomeScreen(),
+                );
+              },
+            ),
+          );
   }
 }

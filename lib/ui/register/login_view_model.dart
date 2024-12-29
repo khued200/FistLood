@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:shopping_conv/data/services/auth_service.dart';
 import 'package:shopping_conv/ui/app_routes.dart';
+import 'package:shopping_conv/ui/home_screen.dart';
 import 'package:shopping_conv/utils/auth_storage_util.dart';
 
 class LoginViewModel extends ChangeNotifier {
@@ -24,8 +26,16 @@ class LoginViewModel extends ChangeNotifier {
         password: password,
       );
       //save token
+      print(email);
+      print(password);
       await AuthStorage.saveAuthToken(loginUser.data.accessToken, loginUser.data.refreshToken);
-      Navigator.pushNamed(context, AppRoutes.groceryList);
+      print('auth access');
+      Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
+                );
+      
     } catch (error) {
       errorMessage = error.toString();
     } finally {
