@@ -68,7 +68,7 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
-//         backgroundColor: const Color(0x9C9EEDFF),
+//         backgroundColor: constant Color(0x9C9EEDFF),
 //         elevation: 0,
 //         leading: null,
 //         title: Text(
@@ -89,7 +89,7 @@
 //         children: [
 //           // Calendar section
 //           Container(
-//             decoration: const BoxDecoration(
+//             decoration: constant BoxDecoration(
 //               color: Color(0x9CC3FCDF),
 //             ),
 //             child:TableCalendar(
@@ -148,7 +148,7 @@
 //                       children: dishesPlannedList .map((event) {
 //                         final color = getMealTypeColor(event.mealType);
 //                         return Container(
-//                           margin: const EdgeInsets.symmetric(horizontal: 1.0),
+//                           margin: constant EdgeInsets.symmetric(horizontal: 1.0),
 //                           width: 8,
 //                           height: 8,
 //                           decoration: BoxDecoration(
@@ -248,14 +248,14 @@
 //   final String mealName;
 //   final String mealType;
 
-//   const MealCard({required this.mealName, required this.mealType});
+//   constant MealCard({required this.mealName, required this.mealType});
 
 //   @override
 //   Widget build(BuildContext context) {
 //     return Container(
 //       height: 50,
-//       padding: const EdgeInsets.only(left: 10),
-//       decoration: const BoxDecoration(
+//       padding: constant EdgeInsets.only(left: 10),
+//       decoration: constant BoxDecoration(
 //         color: Colors.white,
 //         border: Border(
 //           bottom: BorderSide(color: Colors.grey),
@@ -266,21 +266,21 @@
 //           Expanded(
 //             child: Column(
 //               children: [
-//                 Text(mealName,style: const TextStyle(fontSize: 16),),
+//                 Text(mealName,style: constant TextStyle(fontSize: 16),),
 //                 Text(
 //                   mealType,
 //                   style: TextStyle(
 //                     fontSize: 12, 
 //                     color: mealType== 'Breakfast'
-//                           ? const Color(0x9C0066FF): mealType== 'Lunch'?
-//                                       const Color(0x9CFF8000): const Color(0x9CFF0000),
+//                           ? constant Color(0x9C0066FF): mealType== 'Lunch'?
+//                                       constant Color(0x9CFF8000): constant Color(0x9CFF0000),
 //                   ),
 //                 ),
 //               ]
 //             )
 //           ),
 //           IconButton(
-//             icon: const Icon(Icons.arrow_forward_ios, size: 18),
+//             icon: constant Icon(Icons.arrow_forward_ios, size: 18),
 //             onPressed: () {
 //               // Edit functionality
 //             },
@@ -294,12 +294,12 @@
 // // Color _getMealTypeColor(String mealType) {
 // //   switch (mealType) {
 // //     case 'Breakfast':
-// //       return const Color(0xFF0066FF); // Blue
+// //       return constant Color(0xFF0066FF); // Blue
 // //     case 'Lunch':
-// //       return const Color(0xFFFF8000); // Orange
+// //       return constant Color(0xFFFF8000); // Orange
 // //     case 'Dinner':
-// //       return const Color(0xFFFF0000); // Red
+// //       return constant Color(0xFFFF0000); // Red
 // //     default:
-// //       return const Color(0xFF808080); // Gray for undefined meal types
+// //       return constant Color(0xFF808080); // Gray for undefined meal types
 // //   }
 // // }

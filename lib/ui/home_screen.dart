@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_conv/blocs/navigation/navigation.dart';
+import 'package:shopping_conv/ui/fridge/fridge_screen.dart';
+import 'package:shopping_conv/ui/profile/profile_view_screen.dart';
+import 'package:shopping_conv/ui/profile/user_profile_view_model.dart';
 import 'package:shopping_conv/ui/register/login_view_model.dart';
 import 'package:shopping_conv/ui/register/register_screen.dart';
 import 'list/grocery_list_screen.dart';
@@ -17,9 +20,9 @@ class HomeScreen extends StatelessWidget {
 
   final List<Widget> _initialScreens = [
     GroceryListScreen(),
-    const Center(child: Text('Recipes')),
+    FridgeScreen(),
     MealPlanScreen(),
-    const Center(child: Text('Settings')),
+    ProfileScreen(),
   ];
 
   @override
@@ -66,6 +69,9 @@ class CustomBottomNavigation extends StatelessWidget {
           unselectedItemColor: Colors.grey,
           onTap: (index) {
             if (state.currentIndex != index) {
+              if (index == 3){
+                context.read<ProfileViewModel>().fetchProfile(context);
+              }
               context.read<NavigationBloc>().add(NavigateToTab(index));
             } else {
               // Pop to first screen in the current tab
