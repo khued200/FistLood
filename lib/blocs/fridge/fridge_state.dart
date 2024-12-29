@@ -10,6 +10,7 @@ abstract class FridgeState extends Equatable {
 class FridgeInitial extends FridgeState {}
 
 class FridgeLoading extends FridgeState {}
+class FridgeItemAdded extends FridgeState {}
 
 class FridgeLoaded extends FridgeState {
   final List<GetFridgeItemData> items;

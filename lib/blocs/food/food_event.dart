@@ -5,6 +5,13 @@ abstract class FoodEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
+class FetchFoodDetail extends FoodEvent {
+  final BuildContext context;
+  final int id;
+  FetchFoodDetail({required this.context, required this.id});
+  @override
+  List<Object?> get props => [context, id];
+}
 
 class FetchFoodItems extends FoodEvent {
   final BuildContext context;

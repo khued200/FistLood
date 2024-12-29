@@ -14,8 +14,9 @@ import 'package:shopping_conv/blocs/food/food_state.dart';
 import 'package:shopping_conv/blocs/unit/unit_bloc.dart';
 import 'package:shopping_conv/blocs/unit/unit_event.dart';
 import 'package:shopping_conv/blocs/unit/unit_state.dart';
-import 'package:shopping_conv/ui/app_routes.dart';
-import 'package:shopping_conv/ui/home_screen.dart';
+
+import 'package:shopping_conv/ui/food/food_detail_screen.dart';
+
 
 class FoodManagementScreen extends StatelessWidget {
   void _showAddFoodDialog(BuildContext context) {
@@ -34,16 +35,16 @@ class FoodManagementScreen extends StatelessWidget {
           final bytes = await File(pickedFile.path).readAsBytes();
           imageBase64 = base64Encode(bytes); // Convert image to Base64
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Image uploaded successfully')),
+            SnackBar(content: Text('Tải ảnh thành công')),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('No image selected')),
+            SnackBar(content: Text('Không có ảnh được chọn')),
           );
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to upload image: $e')),
+          SnackBar(content: Text('Thật bại: $e')),
         );
       }
     }
@@ -53,24 +54,24 @@ class FoodManagementScreen extends StatelessWidget {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            title: Text('Add New Food'),
+            title: Text('Thêm món ăn'),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: _nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: InputDecoration(labelText: 'Tên'),
                   ),
                   TextField(
                     controller: _typeController,
-                    decoration: InputDecoration(labelText: 'Type'),
+                    decoration: InputDecoration(labelText: 'Loại'),
                   ),
                   BlocConsumer<CategoryBloc, CategoryState>(
                     listener: (context, state) {
                       if (state is CategoryError) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Failed to load categories')),
+                          SnackBar(content: Text('Có lỗi xảy ra')),
                         );
                       }
                     },
@@ -93,7 +94,7 @@ class FoodManagementScreen extends StatelessWidget {
                         },
                         child: DropdownButtonFormField<int>(
                           value: selectedCategory,
-                          hint: Text('Select a category'),
+                          hint: Text('Chọn danh mục'),
                           items: categoryItems,
                           onChanged: (value) {
                             setState(() {
@@ -108,7 +109,7 @@ class FoodManagementScreen extends StatelessWidget {
                     listener: (context, state) {
                       if (state is UnitError) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Failed to load units')),
+                          SnackBar(content: Text('Có lỗi xảy ra')),
                         );
                       }
                     },
@@ -131,7 +132,7 @@ class FoodManagementScreen extends StatelessWidget {
                         },
                         child: DropdownButtonFormField<int>(
                           value: selectedUnit,
-                          hint: Text('Select a unit'),
+                          hint: Text('Chọn đơn vị'),
                           items: unitItems,
                           onChanged: (value) {
                             setState(() {
@@ -146,11 +147,11 @@ class FoodManagementScreen extends StatelessWidget {
                   ElevatedButton.icon(
                     onPressed: _pickImage,
                     icon: Icon(Icons.upload),
-                    label: Text('Upload Image'),
+                    label: Text('Thêm ảnh'),
                   ),
                   if (imageBase64 != null) ...[
                     SizedBox(height: 8),
-                    Text('Image selected', style: TextStyle(color: Colors.green)),
+                    Text('Ảnh đã chọn', style: TextStyle(color: Colors.green)),
                   ],
                 ],
               ),
@@ -160,7 +161,7 @@ class FoodManagementScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('Cancel'),
+                child: Text('Huỷ'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -181,12 +182,12 @@ class FoodManagementScreen extends StatelessWidget {
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Please fill in all fields and upload an image'),
+                        content: Text('Hãy điền đầy đủ thông tin'),
                       ),
                     );
                   }
                 },
-                child: Text('Add'),
+                child: Text('Thêm'),
               ),
             ],
           );
@@ -203,7 +204,7 @@ class FoodManagementScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Food Management'),
+        title: Text('Quản lý món ăn'),
       ),
       body: BlocBuilder<FoodBloc, FoodState>(
         builder: (context, state) {
@@ -229,7 +230,9 @@ class FoodManagementScreen extends StatelessWidget {
                   return GestureDetector(
                     onTap: () {
                       // Navigate to the Food Detail Screen
-                      Navigator.pushNamed(context, AppRoutes.homescreen);
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => FoodDetailScreen(foodId: item.id!), // Pass food ID
+                      ),);
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -295,12 +298,12 @@ class FoodManagementScreen extends StatelessWidget {
                 },
               );
             } else {
-              return Center(child: Text('No food items found'));
+              return Center(child: Text('Không có món ăn nào'));
             }
           } else if (state is FoodError) {
             return Center(child: Text('Error: ${state.message}'));
           } else {
-            return Center(child: Text('No food items found'));
+            return Center(child: Text('Không xác định'));
           }
         },
       ),

@@ -9,6 +9,7 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
   FoodBloc({required this.foodService}) : super(FoodInitial()) {
     on<FetchFoodItems>(_onFetchFoodItems);
     on<AddFoodItem>(_onAddFoodItem);
+    on<FetchFoodDetail>(_onFetchFoodDetail);
   }
 
   Future<void> _onFetchFoodItems( FetchFoodItems event, Emitter<FoodState> emit) async {
@@ -32,6 +33,16 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
       add(FetchFoodItems(context: event.context)); // Re-fetch items after adding
     } catch (e) {
       emit(FoodError(e.toString()));
+    }
+  }
+  Future<void> _onFetchFoodDetail(
+      FetchFoodDetail event, Emitter<FoodState> emit) async {
+    emit(FoodDetailLoading());
+    try {
+      final resp = await foodService.getFoodDetail(event.context, event.id);
+      emit(FoodDetailLoaded(resp.data));
+    } catch (e) {
+      emit(FoodDetailError(e.toString()));
     }
   }
 }

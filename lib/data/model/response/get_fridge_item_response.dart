@@ -1,3 +1,5 @@
+import 'package:shopping_conv/data/model/response/get_list_food_response.dart';
+
 class GetFridgeItemResponse {
   final String message;
   final List<GetFridgeItemData> data;
@@ -6,6 +8,7 @@ class GetFridgeItemResponse {
   static Future<GetFridgeItemResponse> fromJson(data) {
     List<GetFridgeItemData> list = [];
     for (var item in data['data']) {
+      var food = item['food'];
       list.add(GetFridgeItemData(
         id: item['id'],
         note: item['note'],
@@ -14,6 +17,14 @@ class GetFridgeItemResponse {
         foodId: item['food_id'],
         createdAt: item['created_at'],
         updatedAt: item['updated_at'],
+        food: food != null ? FoodData(
+          id: food['id'],
+          name: food['name'],
+          type: food['type'],
+          unitID: food['unit_id'],
+          categoryId: food['category_id'],
+          imgUrl: food['img_url'],
+        ) : null,
       ));
     }
     return Future.value(GetFridgeItemResponse(
@@ -31,5 +42,6 @@ class GetFridgeItemData {
   int? foodId;
   int? createdAt;
   int? updatedAt;
-  GetFridgeItemData({this.id, this.note, this.expiredDate, this.quantity, this.foodId, this.createdAt, this.updatedAt});
+  FoodData? food;
+  GetFridgeItemData({this.id, this.note, this.expiredDate, this.quantity, this.foodId, this.createdAt, this.updatedAt, this.food});
 }
