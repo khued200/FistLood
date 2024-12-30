@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_conv/data/services/auth_service.dart';
 import 'package:shopping_conv/ui/app_routes.dart';
-import 'package:shopping_conv/ui/home_screen.dart';
+import 'package:shopping_conv/ui/constant/error.dart';
 import 'package:shopping_conv/ui/register/request_otp_screen.dart';
 import 'package:shopping_conv/utils/auth_storage_util.dart';
 
@@ -13,7 +13,7 @@ class LoginViewModel extends ChangeNotifier {
   String? errorMessage;
   int? errorCode;
 
-  Future<void> login({
+  Future<bool> login({
     required String email,
     required String password,
     required BuildContext context,
@@ -30,20 +30,20 @@ class LoginViewModel extends ChangeNotifier {
       );
       if (loginUser.data.isVerified == false){
         Navigator.push(context, MaterialPageRoute(builder: (context) => OtpVerificationScreen(email: email)));
-        return;
+        return true;
       }
       //save token
-      print(email);
-      print(password);
-      await AuthStorage.saveAuthToken(loginUser.data.accessToken, loginUser.data.refreshToken);
+      await AuthStorage.saveAuthToken(loginUser.data.accessToken!, loginUser.data.refreshToken!);
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppRoutes.homescreen, // Your home screen route
             (Route<dynamic> route) => false,
       );
-    } catch (error) {
+      return true;
+    }
+    catch (error) {
       errorMessage = error.toString();
-
+      return false;
     } finally {
       isLoading = false;
       notifyListeners();

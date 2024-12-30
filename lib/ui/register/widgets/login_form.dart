@@ -13,15 +13,30 @@ class _LoginFormState extends State<LoginForm> {
   String _email = '';
   String _password = '';
 
-  void _login(BuildContext context) {
+  void _login(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       // Call login method from LoginViewModel
-      context.read<LoginViewModel>().login(
+      bool success = await context.read<LoginViewModel>().login(
         email: _email,
         password: _password,
         context: context,
       );
+      if (!success) {
+        final errorMessage = context.read<LoginViewModel>().errorMessage;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage ?? 'Đã xảy ra lỗi'),
+          ),
+        );
+      }
+      else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Đăng nhập thành công'),
+          ),
+        );
+      }
     }
   }
 

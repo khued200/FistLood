@@ -16,10 +16,10 @@ class _RegisterFormState extends State<RegisterForm> {
   String _language = 'vn';
   String _timezone = 'Asia/Ho_Chi_Minh';
 
-  void _register(BuildContext context) {
+  void _register(BuildContext context) async{
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      context.read<RegisterViewModel>().register(
+      var success = await context.read<RegisterViewModel>().register(
         context: context,
         email: _email,
         password: _password,
@@ -27,7 +27,21 @@ class _RegisterFormState extends State<RegisterForm> {
         language: _language,
         timezone: _timezone,
       );
-
+      if(!success){
+        final errorMessage = context.read<RegisterViewModel>().errorMessage;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage ?? MessageError.errorCommon),
+          ),
+        );
+      }
+      else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Đăng ký thành công'),
+          ),
+        );
+      }
     }
   }
 
@@ -86,14 +100,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 // ),
               ),
             ),
-            if (viewModel.errorMessage != null)
-               Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text(
-                  MessageError.errorCommon,
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
+
           ],
         ),),
     );

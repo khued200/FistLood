@@ -22,9 +22,9 @@ class LoginUserResponse {
 
 }
 class LoginUserData {
-  final String accessToken;
-  final String refreshToken;
-  final bool isVerified;
+  String? accessToken;
+  String? refreshToken;
+  bool? isVerified;
   LoginUserData({
     required this.accessToken,
     required this.refreshToken,
