@@ -6,8 +6,7 @@ class RegisterUserResponse {
   final RegisterUserResponseData data;
   RegisterUserResponse({
     required this.code,
-    required this.message,
-    required this.data,
+    required this.message, required this.data,
   });
 
   static Future<RegisterUserResponse> fromJson(data) {
@@ -24,9 +23,9 @@ class RegisterUserResponse {
 
 }
 class RegisterUserResponseData {
-  String email;
-  bool isVerified;
-  bool isActive;
+  String? email;
+  bool? isVerified;
+  bool? isActive;
   RegisterUserResponseData({
     required this.email,
     required this.isVerified,

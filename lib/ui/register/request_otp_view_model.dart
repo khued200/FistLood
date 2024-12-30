@@ -8,7 +8,7 @@ class RequestOtpViewModel extends ChangeNotifier{
   RequestOtpViewModel({required this.authService});
   bool isLoading = false;
   String? errorMessage;
-  Future<void> sendOTP({required BuildContext context,
+  Future<bool> sendOTP({required BuildContext context,
     required String email,
   }) async {
     isLoading = true;
@@ -19,16 +19,18 @@ class RequestOtpViewModel extends ChangeNotifier{
         email: email,
       );
       if (otpResponse.code == 200){
-
+        return true;
       }
+      return false;
     } catch (error) {
       errorMessage = error.toString();
+      return false;
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
-  Future<void> verifyOTP({required BuildContext context,
+  Future<bool> verifyOTP({required BuildContext context,
     required String email,
     required String otp,
   }) async {
@@ -43,8 +45,10 @@ class RequestOtpViewModel extends ChangeNotifier{
       if (otpResponse.code == 200){
         Navigator.pushReplacementNamed(context, AppRoutes.register);
       }
+      return true;
     } catch (error) {
       errorMessage = error.toString();
+      return false;
     } finally {
       isLoading = false;
       notifyListeners();

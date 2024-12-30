@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:shopping_conv/utils/auth_storage_util.dart';
 
 class ApiService {
-  static const baseURL = "http://localhost:8080";
+  static const baseURL = "https://api.gotostore.site";
   final Dio _dio;
 
 

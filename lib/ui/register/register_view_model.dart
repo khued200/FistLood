@@ -10,7 +10,7 @@ class RegisterViewModel extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
-  Future<void> register({
+  Future<bool> register({
     required BuildContext context,
     required String email,
     required String password,
@@ -33,8 +33,10 @@ class RegisterViewModel extends ChangeNotifier {
       if (registeredUser.data.isVerified == false){
         Navigator.push(context, MaterialPageRoute(builder: (context) => OtpVerificationScreen(email: email)));
       }
+      return true;
     } catch (error) {
       errorMessage = error.toString();
+      return false;
     } finally {
       isLoading = false;
       notifyListeners();

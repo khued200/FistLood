@@ -29,7 +29,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       _formKey.currentState!.save();
         // Use Provider.of with listen: false
         final requestOtpViewModel = context.read<RequestOtpViewModel>();
-        await requestOtpViewModel.verifyOTP(context:context,email: widget.email, otp: _otp);
+        var success = await requestOtpViewModel.verifyOTP(context:context,email: widget.email, otp: _otp);
+        if(!success){
+          final errorMessage = requestOtpViewModel.errorMessage;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMessage ?? MessageError.errorCommon),
+            ),
+          );
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Xác nhận thành công'),
+            ),
+          );}
     }
   }
 
@@ -94,15 +108,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 onPressed: viewModel.isLoading ? null : () => _resendOtp(context),
                 child: Text('Gửi lại OTP'),
               ),
-              viewModel.errorMessage != null
-                  ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  MessageError.errorCommon,
-                  style: TextStyle(color: Colors.red),
-                ),
-              )
-                  : Container(),
             ],
           ),
         ),

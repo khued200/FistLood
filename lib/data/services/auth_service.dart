@@ -10,6 +10,7 @@ import 'package:shopping_conv/data/services/utils/api_instance.dart';
 import 'package:shopping_conv/data/services/utils/device_info.dart';
 import 'package:dio/dio.dart';
 import 'package:shopping_conv/ui/app_routes.dart';
+import 'package:shopping_conv/ui/constant/error.dart';
 import 'package:shopping_conv/utils/auth_storage_util.dart';
 
 
@@ -42,10 +43,17 @@ class AuthService {
       final response = await apiService.dio.post(
         registerUserPath,
         data: requestBody,
+          options: Options(
+            extra: {'requiresToken': false},
+          )
       );
       return RegisterUserResponse.fromJson(response.data);
-    } catch (e) {
-      throw Exception(e);
+    }  on DioException catch (e) {
+      var message = e.response?.data['message'];
+      throw message;
+    }
+    catch (e) {
+      throw MessageError.errorCommon;
     }
   }
   Future<LoginUserResponse> loginUser({
@@ -59,12 +67,15 @@ class AuthService {
         loginPath,
         data: requestBody,
           options: Options(
-            extra: {'requiresToken': true},
+            extra: {'requiresToken': false},
           )
       );
       return LoginUserResponse.fromJson(response.data);
-    } catch (e) {
-      throw Exception(e);
+    } on DioException catch (e) {
+      var message = e.response?.data['message'];
+      throw message;
+    }catch (e) {
+      throw MessageError.errorCommon;
     }
   }
   Future<OTPResponse> sendOTP({
@@ -75,10 +86,16 @@ class AuthService {
       final response = await apiService.dio.post(
         SendOTPPath,
         data: requestBody,
+        options: Options(
+          extra: {'requiresToken': false},
+        )
       );
       return OTPResponse.fromJson(response.data);
-    } catch (e) {
-      throw Exception(e);
+    } on DioException catch (e) {
+      throw e.response?.data['message'];
+    }
+    catch (e) {
+      throw MessageError.errorCommon;
     }
   }
   Future<OTPResponse> verifyOTP({
@@ -90,10 +107,16 @@ class AuthService {
       final response = await apiService.dio.post(
         VerifyOTPPath,
         data: requestBody,
+        options: Options(
+          extra: {'requiresToken': false},
+        )
       );
       return OTPResponse.fromJson(response.data);
-    } catch (e) {
-      throw Exception(e);
+    } on DioException catch (e) {
+      throw e.response?.data['message'];
+    }
+    catch (e) {
+      throw MessageError.errorCommon;
     }
   }
   Future<GetUserProfileResponse> getUserProfile(BuildContext context) async {
@@ -111,10 +134,10 @@ class AuthService {
       }
       //navigate to login screen
       Navigator.pushReplacementNamed(context,AppRoutes.register);
-      throw Exception(e);
+      throw MessageError.errorCommon;
     }
     catch (e) {
-      throw Exception(e);
+      throw MessageError.errorCommon;
     }
   }
    Future<void> logout(BuildContext context) async {
