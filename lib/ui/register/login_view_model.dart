@@ -33,6 +33,8 @@ class LoginViewModel extends ChangeNotifier {
         return;
       }
       //save token
+      print(email);
+      print(password);
       await AuthStorage.saveAuthToken(loginUser.data.accessToken, loginUser.data.refreshToken);
       Navigator.pushNamedAndRemoveUntil(
         context,

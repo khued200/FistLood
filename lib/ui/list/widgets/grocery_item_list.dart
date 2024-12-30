@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_conv/ui/app_routes.dart';
 import 'package:shopping_conv/ui/helper_func.dart';
+import 'package:shopping_conv/ui/list/edit_item_screen.dart';
+import 'package:shopping_conv/blocs/grocery/grocery_list_bloc.dart';
 
 final List<Map<dynamic, dynamic>> groceryCategories = [
     {
@@ -92,14 +96,17 @@ class GroceryItem extends StatelessWidget {
   final String item;
   final String quantity;
 
-  const GroceryItem({
+  GroceryItem({
     Key? key,
     required this.item,
     this.quantity = '',
   }) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
+    String category = getCategoryFromItem(item, groceryCategories);
+
     return Container(
       height: 50,
       padding: const EdgeInsets.only(left: 10),
@@ -120,7 +127,18 @@ class GroceryItem extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit, size: 18),
             onPressed: () {
-              // Edit functionality
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider.value(
+                    value: BlocProvider.of<GroceryBloc>(context),
+                    child: EditGroceryScreen(
+                      item: item,
+                      quantity: quantity,
+                      category: category,
+                    ),
+                  ),
+                ),
+              );
             },
           ),
         ],

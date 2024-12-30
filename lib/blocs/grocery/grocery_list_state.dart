@@ -1,4 +1,6 @@
-import '../../models/grocery_list_models.dart';
+import 'package:shopping_conv/ui/list/grocery_list_screen.dart';
+
+import '../../ui/list/widgets/grocery_item_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -28,3 +30,4 @@ class GroceryState extends Equatable {
   @override
   List<Object> get props => [groceryLists, isAddingItem, error];
 }
+

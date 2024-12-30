@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:shopping_conv/models/meal_plan_models.dart';
+import 'package:shopping_conv/ui/meal_plan/widgets/meal_plan_models.dart';
 
 abstract class MealPlanEvent extends Equatable {
   const MealPlanEvent();
@@ -26,4 +26,24 @@ class AddMealPlan extends MealPlanEvent {
 
   @override
   List<Object?> get props => [meal, day];
+}
+
+class AddMealToPlan extends MealPlanEvent {
+  final Recipe recipe;
+  final DateTime day;
+
+  const AddMealToPlan(this.recipe, this.day);
+
+  @override
+  List<Object?> get props => [recipe, day];
+}
+
+class DeleteMeal extends MealPlanEvent {
+  final DishesPlanned meal;
+  final DateTime day;
+
+  DeleteMeal(this.meal, this.day);
+
+  @override
+  List<Object?> get props => [meal,day];
 }

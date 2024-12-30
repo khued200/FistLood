@@ -27,12 +27,12 @@ String getRouteFromIndex(int index) {
 
 Color getMealTypeColor(String mealType) {
   switch (mealType) {
-    case 'Breakfast':
-      return const Color(0xFF0066FF); // Blue
-    case 'Lunch':
-      return const Color(0xFFFF8000); // Orange
-    case 'Dinner':
-      return const Color(0xFFFF0000); // Red
+    case 'Bữa sáng':
+      return const Color(0xFFFFEB3B); // Blue
+    case 'Bữa trưa':
+      return const Color(0xFFFF7043); // Orange
+    case 'Bữa tối':
+      return const Color(0xFF1E3A8A); // Red
     default:
       return const Color(0xFF808080); // Gray for undefined meal types
   }
